@@ -1,71 +1,87 @@
 package com.kushberg.myapplication;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
-import android.provider.DocumentsContract;
-
-import org.jsoup.Jsoup;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 public class LoginActivity extends AppCompatActivity {
 
+    String password;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = new Intent(this, MainActivity.class);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login2);
+        setContentView(R.layout.activity_login);
+
+        Button loginButton = (Button)findViewById(R.id.email_sign_in_button);
+        EditText emailField  = (EditText)findViewById(R.id.email);
+        EditText passwordField = (EditText)findViewById(R.id.password);
+
+
+        loginButton.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    public void onClick(View view)
+                    {
+                          username = emailField.getText().toString();
+
+                         password = passwordField.getText().toString() ;
+
+
+                        startActivity(intent);
+                    }
+                });
 
 
 
 
     }
 
+    /*
+
     public void setLogin(){
-        Connection.Response res = Jsoup.connect("https://intranet.tam.ch/bmz")
-            .data("loginuser", "myUsername", "loginpassword", "myPassword")
-            .method(Connection.Method.POST)
-            .execute();}
+        try {
+            Connection.Response res = Jsoup.connect("https://intranet.tam.ch/bmz")
+                .data("loginuser", username, "loginpassword", password)
+                .method(Connection.Method.POST)
+                    .execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     Map<String, String> loginCookies = res.cookies();
 
 
-    Document doc = Jsoup.connect("urlYouNeedToBeLoggedInToAccess")
-            .cookies(loginCookies)
-            .get();
+    Document doc;
 
+    {
+        try {
+            doc = Jsoup.connect("urlYouNeedToBeLoggedInToAccess")
+                        .cookies(loginCookies)
+                        .get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    */
 }
 
 
