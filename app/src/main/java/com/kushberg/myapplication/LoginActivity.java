@@ -1,11 +1,6 @@
 package com.kushberg.myapplication;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -29,10 +24,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.jsoup.Jsoup;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
+
+import android.provider.DocumentsContract;
+
+import org.jsoup.Jsoup;
+import org.jsoup.Connection;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -44,6 +49,23 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
     }
+
+    public void setLogin(){
+        Connection.Response res = Jsoup.connect("https://intranet.tam.ch/bmz")
+            .data("loginuser", "myUsername", "loginpassword", "myPassword")
+            .method(Connection.Method.POST)
+            .execute();}
+
+    Map<String, String> loginCookies = res.cookies();
+
+
+    Document doc = Jsoup.connect("urlYouNeedToBeLoggedInToAccess")
+            .cookies(loginCookies)
+            .get();
+
+
 }
+
 
