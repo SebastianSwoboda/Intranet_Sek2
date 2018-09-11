@@ -53,35 +53,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    /*
-
-    public void setLogin(){
-        try {
-            Connection.Response res = Jsoup.connect("https://intranet.tam.ch/bmz")
-                .data("loginuser", username, "loginpassword", password)
-                .method(Connection.Method.POST)
-                    .execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    Map<String, String> loginCookies = res.cookies();
 
 
-    Document doc;
 
-    {
-        try {
-            doc = Jsoup.connect("urlYouNeedToBeLoggedInToAccess")
-                        .cookies(loginCookies)
-                        .get();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    */
+
+
 }
 
 
