@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Connection extends AsyncTask<Void,Void, Void> {
-    
-    
+public class Connection extends AsyncTask<Void, Void, Void> {
 
     final String USER_AGENT = "Mozilla";
 
@@ -19,7 +17,7 @@ public class Connection extends AsyncTask<Void,Void, Void> {
     String loginActionUrl = "https://intranet.tam.ch/";
     String timeTableUrl = "https://intranet.tam.ch/tbz/calendar";
     String loginuser = "sebastian.swoboda@edu.tbz.ch";
-    String loginpassword = "Sebolanawurscht9";
+    String loginpassword = "*****";
     String loginschool = "tbz";
 
     Map<String, String> cookies = new HashMap<>();
@@ -28,32 +26,23 @@ public class Connection extends AsyncTask<Void,Void, Void> {
 
     String finalUrl;
 
-
-
     @Override
-    protected Void doInBackground(Void... arg0)   {
+    protected Void doInBackground(Void... arg0) {
 
         try {
 
-        org.jsoup.Connection.Response loginForm = Jsoup.connect(loginFormUrl).method(org.jsoup.Connection.Method.GET).userAgent(USER_AGENT).execute();
-        Document loginDoc = loginForm.parse();
+            org.jsoup.Connection.Response loginForm = Jsoup.connect(loginFormUrl).method(org.jsoup.Connection.Method.GET).userAgent(USER_AGENT).execute();
+            Document loginDoc = loginForm.parse();
 
-        cookies.putAll(loginForm.cookies());
+            cookies.putAll(loginForm.cookies());
 
+            formData.put("Button", "Anmelden");
+            formData.put("utf8", "e2 9c 93");
+            formData.put("loginuser", loginuser);
+            formData.put("loginpassword", loginpassword);
+            formData.put("loginschool", loginschool);
 
-
-
-
-
-        formData.put("Button","Anmelden");
-        formData.put("utf8","e2 9c 93");
-        formData.put("loginuser",loginuser);
-        formData.put("loginpassword",loginpassword);
-        formData.put("loginschool",loginschool);
-
-        org.jsoup.Connection.Response homePage = null;
-
-            homePage = Jsoup.connect(loginActionUrl)
+            org.jsoup.Connection.Response homePage = Jsoup.connect(loginActionUrl)
                     .cookies(cookies)
                     .data(formData)
                     .method(org.jsoup.Connection.Method.POST)
@@ -61,25 +50,22 @@ public class Connection extends AsyncTask<Void,Void, Void> {
 
                     .execute();
 
+            cookies.putAll(homePage.cookies());
 
-        cookies.putAll(homePage.cookies());
+            timeTableAccess.put("menuitem", "Stundenplan");
 
-        timeTableAccess.put("menuitem","Stundenplan");
+            org.jsoup.Connection.Response timetablePage = Jsoup.connect(timeTableUrl)
+                    .cookies(cookies)
+                    .data(timeTableAccess)
+                    .method(org.jsoup.Connection.Method.GET)
+                    .userAgent(USER_AGENT)
+                    .execute();
 
-        org.jsoup.Connection.Response timetablePage = Jsoup.connect(timeTableUrl)
-                .cookies(cookies)
-                .data(timeTableAccess)
-                .method(org.jsoup.Connection.Method.GET)
-                .userAgent(USER_AGENT)
-                .execute();
+            finalUrl = timetablePage.url().toString();
 
-             finalUrl = timetablePage.url().toString();
-
-
-
-        System.out.println(timetablePage.parse().html());
-        Document timeTableDocument = timetablePage.parse();
-        return null;
+            System.out.println(timetablePage.parse().html());
+            Document timeTableDocument = timetablePage.parse();
+            return null;
 
         } catch (IOException e) {
             e.printStackTrace();
