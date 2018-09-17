@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class Connection extends AsyncTask<Void, Void, Void> {
 
+    LoginActivity loginActivity;
+
     final String USER_AGENT = "Mozilla";
 
     String loginFormUrl = "https://intranet.tam.ch/";
     String loginActionUrl = "https://intranet.tam.ch/";
     String timeTableUrl = "https://intranet.tam.ch/tbz/calendar";
-    String loginuser = "sebastian.swoboda@edu.tbz.ch";
-    String loginpassword = "*****";
     String loginschool = "tbz";
 
     Map<String, String> cookies = new HashMap<>();
@@ -27,7 +27,7 @@ public class Connection extends AsyncTask<Void, Void, Void> {
     String finalUrl;
 
     @Override
-    protected Void doInBackground(Void... arg0) {
+    protected Void doInBackground(Void... voids) {
 
         try {
 
@@ -38,8 +38,8 @@ public class Connection extends AsyncTask<Void, Void, Void> {
 
             formData.put("Button", "Anmelden");
             formData.put("utf8", "e2 9c 93");
-            formData.put("loginuser", loginuser);
-            formData.put("loginpassword", loginpassword);
+            formData.put("loginuser", loginActivity.username);
+            formData.put("loginpassword", loginActivity.password);
             formData.put("loginschool", loginschool);
 
             org.jsoup.Connection.Response homePage = Jsoup.connect(loginActionUrl)
@@ -72,5 +72,15 @@ public class Connection extends AsyncTask<Void, Void, Void> {
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        loginActivity.finalUrl = finalUrl;
+
+
+
+
     }
 }

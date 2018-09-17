@@ -1,7 +1,14 @@
 package com.kushberg.myapplication;
 
+import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -18,12 +25,29 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    private DrawerLayout drawerLayout;
+
     ListView timetableList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Time Table");
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+
+
 
         timetableList = (ListView)findViewById(R.id.timetableList);
 
@@ -37,75 +61,43 @@ public class MainActivity extends AppCompatActivity {
                 subjects );
 
         timetableList.setAdapter(adapter);
-    }
-
-    public void webpageConnection() throws IOException {
-        final String USER_AGENT = "\"Mozilla/5.0 (Windows NT\" +\n" +
-                "          \" 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2\"";
-
-        String loginFormUrl = "https://intranet.tam.ch/";
-        String loginActionUrl = "https://intranet.tam.ch/";
-        String timeTableUrl = "https://intranet.tam.ch/tbz/calendar";
-        String loginuser = "sebastian.swoboda@edu.tbz.ch";
-        String loginpassword = "Sebolanawurscht9";
-        String loginschool = "tbz";
-
-        Map<String, String> cookies = new HashMap<>();
-        Map<String, String> formData = new HashMap<>();
-        Map<String, String> timeTableAccess = new HashMap<>();
-
-        Connection.Response loginForm = Jsoup.connect(loginFormUrl).method(Connection.Method.GET).userAgent(USER_AGENT).execute();
-        Document loginDoc = loginForm.parse();
-
-        cookies.putAll(loginForm.cookies());
 
 
+        drawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
 
-        formData.put("Button", "Anmelden");
-        formData.put("utf8", "e2 9c 93");
-        formData.put("loginuser", loginuser);
-        formData.put("loginpassword", loginpassword);
-        formData.put("loginschool", loginschool);
+                    @Override
+                    public void onDrawerSlide(@NonNull View view, float v) {
 
-        Connection.Response homePage = Jsoup.connect(loginActionUrl)
-                .cookies(cookies)
-                .data(formData)
-                .method(Connection.Method.POST)
-                .userAgent(USER_AGENT)
+                    }
 
-                .execute();
+                    @Override
+                    public void onDrawerOpened(@NonNull View view) {
 
-        cookies.putAll(homePage.cookies());
+                    }
 
-        timeTableAccess.put("menuitem", "Stundenplan");
+                    @Override
+                    public void onDrawerClosed(@NonNull View view) {
 
-        Connection.Response timetablePage = Jsoup.connect(timeTableUrl)
-                .cookies(cookies)
-                .data(timeTableAccess)
-                .method(Connection.Method.GET)
-                .userAgent(USER_AGENT)
-                .execute();
+                    }
 
-        System.out.println(timetablePage.parse().html());
-        Document timeTableDocument = timetablePage.parse();
-        Boolean lol = false;
+                    @Override
+                    public void onDrawerStateChanged(int i) {
 
-        lol = timeTableDocument.hasClass("k-scheduler-table");
-        System.out.println(lol);
-
-
-
-
+                    }
+                }
+        );
 
     }
-
-
-
-
-
-
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }
 

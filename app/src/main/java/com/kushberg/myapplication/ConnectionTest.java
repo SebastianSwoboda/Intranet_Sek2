@@ -1,42 +1,17 @@
 package com.kushberg.myapplication;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.w3c.dom.Document;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-public class Test extends AppCompatActivity {
-    TextView textView;
-    Button button;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-
-
-        button = findViewById(R.id.test);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ConnectionTest().execute();
-               
-
-
-            }
-        });
-    }
-
-    public class ConnectionTest extends AsyncTask<Void, Void, Void> {
-
+public class ConnectionTest extends AsyncTask<Void, Void, Void> {
+LoginActivity loginActivity;
 /*
     @Override
     protected Void doInBackground(Void... voids) {
@@ -59,7 +34,7 @@ public class Test extends AppCompatActivity {
 
             try {
 
-                org.jsoup.nodes.Document doc = Jsoup.connect("https://www.stadt-zuerich.ch/ssd/de/index/sport/schwimmen/sommerbaeder/flussbad_au_hoengg.html").get();
+                Document doc = Jsoup.connect("https://www.stadt-zuerich.ch/ssd/de/index/sport/schwimmen/sommerbaeder/flussbad_au_hoengg.html").get();
 
                 words = doc.select("#baederinfos_temperature_value").text();
                 words2 =doc.select("#baederinfos_status_updated").text();
@@ -74,7 +49,7 @@ public class Test extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            button.setText(words);
+
 
 
 
@@ -84,5 +59,9 @@ public class Test extends AppCompatActivity {
 
 
 
-}
+
+
+
+
+
 
