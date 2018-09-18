@@ -24,10 +24,10 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String finalUrl;
 
     String password;
     String username;
+    String user;
 
     EditText emailField;
     EditText passwordField;
@@ -115,7 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                         .userAgent(USER_AGENT)
                         .execute();
 
-                finalUrl = timetablePage.url().toString();
+                Document timeTablePageDocument = timetablePage.parse();
+
+                Elements lessonElement = timeTablePageDocument.select("div#identity > span");
+
+                user = lessonElement.text();
 
                 return null;
 
@@ -133,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             if (loginElements.toString().equals("")) {
                 dlgAlert.show();
             } else {
+                intent.putExtra("user",user );
                 startActivity(intent);
             }
         }

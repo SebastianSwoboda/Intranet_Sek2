@@ -1,5 +1,8 @@
 package com.kushberg.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,12 +32,26 @@ public class MainActivity extends AppCompatActivity {
 
     ListView timetableList;
 
+    SharedPreferences sharedpreferences;
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        String user = intent.getExtras().getString("user");
+
         setTitle("Time Table");
+
+        sharedpreferences = getSharedPreferences("lol",
+                Context.MODE_PRIVATE);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -50,16 +67,14 @@ public class MainActivity extends AppCompatActivity {
         timetableList = findViewById(R.id.timetableList);
 
         List<String> subjects = new ArrayList<>();
-        subjects.add("Test");
-        subjects.add("Test");
-        subjects.add("Test");
+
+        subjects.add(user);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
                 subjects);
 
         timetableList.setAdapter(adapter);
-
 
         drawerLayout.addDrawerListener(
                 new DrawerLayout.DrawerListener() {
