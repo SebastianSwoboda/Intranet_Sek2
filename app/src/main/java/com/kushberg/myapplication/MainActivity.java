@@ -47,18 +47,16 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
 
 
+        timetableList = findViewById(R.id.timetableList);
 
-
-        timetableList = (ListView)findViewById(R.id.timetableList);
-
-        List<String> subjects = new ArrayList<String>();
+        List<String> subjects = new ArrayList<>();
         subjects.add("Test");
         subjects.add("Test");
         subjects.add("Test");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
-                subjects );
+                subjects);
 
         timetableList.setAdapter(adapter);
 
@@ -89,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

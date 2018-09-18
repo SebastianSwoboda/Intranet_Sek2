@@ -1,30 +1,28 @@
 package com.kushberg.myapplication;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.StrictMode.ThreadPolicy;
-import android.os.StrictMode;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jsoup.Connection;
-import org.jsoup.nodes.Document;
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity {
 
     String finalUrl;
 
@@ -36,6 +34,10 @@ public class LoginActivity extends AppCompatActivity  {
 
     Intent intent;
 
+    AlertDialog.Builder dlgAlert;
+
+    Elements loginElements;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,13 +46,13 @@ public class LoginActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
         setTitle("Login");
 
-        Button loginButton = (Button)findViewById(R.id.email_sign_in_button);
-        emailField  = (EditText)findViewById(R.id.email);
-        passwordField = (EditText)findViewById(R.id.password);
+        Button loginButton = findViewById(R.id.email_sign_in_button);
+        emailField = findViewById(R.id.email);
+        passwordField = findViewById(R.id.password);
 
         loginButton.setOnClickListener(listener);
 
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        dlgAlert = new AlertDialog.Builder(this);
 
         dlgAlert.setMessage("wrong password or username");
         dlgAlert.setTitle("Error Message...");
@@ -58,10 +60,9 @@ public class LoginActivity extends AppCompatActivity  {
         dlgAlert.setCancelable(true);
 
         dlgAlert.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                (dialog, which) -> {
 
-                    }});
+                });
     }
 
     public class Connection2 extends AsyncTask<Void, Void, Void> {
@@ -83,7 +84,6 @@ public class LoginActivity extends AppCompatActivity  {
             try {
 
                 org.jsoup.Connection.Response loginForm = Jsoup.connect(loginFormUrl).method(org.jsoup.Connection.Method.GET).userAgent(USER_AGENT).execute();
-                Document loginDoc = loginForm.parse();
 
                 cookies.putAll(loginForm.cookies());
 
@@ -100,6 +100,9 @@ public class LoginActivity extends AppCompatActivity  {
                         .userAgent(USER_AGENT)
 
                         .execute();
+                Document homePageDocument = homePage.parse();
+
+                loginElements = homePageDocument.select("a[onclick][href]");
 
                 cookies.putAll(homePage.cookies());
 
@@ -113,10 +116,7 @@ public class LoginActivity extends AppCompatActivity  {
                         .execute();
 
                 finalUrl = timetablePage.url().toString();
-/*
-                System.out.println(timetablePage.parse().html());
-                Document timeTableDocument = timetablePage.parse();
-                */
+
                 return null;
 
             } catch (IOException e) {
@@ -129,30 +129,23 @@ public class LoginActivity extends AppCompatActivity  {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(finalUrl.equals("https://intranet.tam.ch/tbz/calendar?menuitem=Stundenplan")){
+
+            if (loginElements.toString().equals("")) {
+                dlgAlert.show();
+            } else {
                 startActivity(intent);
-            }else{
-
-
+            }
         }
     }
-}
+
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
             username = emailField.getText().toString();
 
-            password = passwordField.getText().toString() ;
+            password = passwordField.getText().toString();
             new Connection2().execute();
-            /*
-
-            if (finalUrl.equals("https://intranet.tam.ch/tbz/calendar?menuitem=Stundenplan")){
-                startActivity(intent);
-
-            }else{
-                System.out.println("error");}*/
-
         }
     };
 }
