@@ -4,6 +4,7 @@ Intranet_ Sek2
 Tierd of using the intranet webpage to check youre timetable, Start using our simple app.
 
 
+
 ### Features:
 - Check your Timetable
 
@@ -16,5 +17,7 @@ Tierd of using the intranet webpage to check youre timetable, Start using our si
 ### Contact
 If you find any bugs or you have any suggestions for improvments don't hesetate to contact us.
 - Email: admin@kushberg.com
+
+### Projekt has failed because JSoup does not support JavaScript parsing
 
 
