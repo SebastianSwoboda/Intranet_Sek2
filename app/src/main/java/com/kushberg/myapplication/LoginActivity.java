@@ -10,15 +10,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -28,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     String password;
     String username;
     String user;
+    String loginSchool;
 
     EditText emailField;
     EditText passwordField;
@@ -38,13 +43,35 @@ public class LoginActivity extends AppCompatActivity {
 
     Elements loginElements;
 
+    List<String> schools = new ArrayList();
+
+    Spinner sItems;
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         intent = new Intent(this, MainActivity.class);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sItems = findViewById(R.id.schoolDropdown);
+
         setTitle("Login");
+
+        schools.add("Technische Berufsschule Zürich");
+
+        ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, schools);
+
+        schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sItems.setAdapter(schoolAdapter);
 
         Button loginButton = findViewById(R.id.email_sign_in_button);
         emailField = findViewById(R.id.email);
@@ -67,12 +94,21 @@ public class LoginActivity extends AppCompatActivity {
 
     public class Connection2 extends AsyncTask<Void, Void, Void> {
 
+        String  getSchool(){
+            String selected = sItems.getSelectedItem().toString();
+            if (selected.equals("Technische Berufsschule Zürich")) {
+                loginSchool = "tbz";
+
+            }
+            return loginSchool;
+        }
+
         final String USER_AGENT = "Mozilla";
 
         String loginFormUrl = "https://intranet.tam.ch/";
         String loginActionUrl = "https://intranet.tam.ch/";
         String timeTableUrl = "https://intranet.tam.ch/tbz/calendar";
-        String loginschool = "tbz";
+        String loginschool = getSchool();
 
         Map<String, String> cookies = new HashMap<>();
         Map<String, String> formData = new HashMap<>();

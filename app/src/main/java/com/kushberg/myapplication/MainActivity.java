@@ -34,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -62,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-
 
         timetableList = findViewById(R.id.timetableList);
 
